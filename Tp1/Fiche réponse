@@ -1,0 +1,23 @@
+1.Bytecode Python
+  1)BINARY_ADD +
+    BINARY_SUB -
+    BINARY_MULTIPLY *
+    BINARY_TRUE_DIVIDE /
+    BINARY_MODULO %
+    BINARY_FLOOR_DIVIDE //
+    BINARY_POWER **
+  2)POP_TOP retour en haut
+    POP_BLOCK retour en début de boucle
+    POP_JUMP_IF_FALSE X saute à l'instruction X si la condition est POP_JUMP_IF_FALSE
+    Python évalue if elif de la mm manière
+  3)la boucle for s'exécute plus rapidement que while
+    for ne fait pas de comparaison pour l'évalutation de la condition de boucle et while oui
+  4)(voir fichier test.py)les méthodes de création de listes sont de plus en plus rapide
+2.
+  1)L'option -E arrête la compilation au moment où les Macros sont appliquées : #define #include etc
+  2)-S créer la traduction du fichier .c en bytecode, -O ne met que les types et déclaration de variables
+  3)-c créer le fichier objet en language machine,-O à toujours la mm utilitée
+
+
+3.
+  1)
