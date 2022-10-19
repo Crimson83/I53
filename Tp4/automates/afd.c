@@ -182,6 +182,7 @@ AFD afd_finit(char *file){
     fgets(chaine,10,fichier);
     char *Sigma=malloc(sizeof(char)*strlen(chaine));
     strcpy(Sigma,chaine);
+    Sigma[strlen(Sigma)-1]='\0';
     AFD A=afd_init(Q,q0,nbFinals,listFinals,Sigma);
     int Ei,Ej;
     char Sk;
