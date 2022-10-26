@@ -169,7 +169,7 @@ AFD afd_finit(char *file){
     sscanf(chaine,"%d",&nbFinals);
     int * listFinals;
     if((listFinals=malloc(sizeof(int)*nbFinals))==NULL){
-      printf("malloc error A");
+      printf("malloc error listFinals");
       exit(1);
     }
     int tmp;

@@ -10,20 +10,20 @@
  * ------------------
  * initialise et retourne un AFN dont les états sont numérotés de 0 à `Q`
  * ajoute le symbole '&' en début d'alphabet si celui-ci n'y est pas déjà
- * 
- * param: 
+ *
+ * param:
  *        Q  - plus grand état de l'automate
  *        nbInitaux - nombre d'états initiaux
  *        listInitiaux - tableau de `nbInitiaux` entiers représentant les états initiaux
  *        nbFinals - nombre d'états finals
  *        listFinals - tableau de `nbFinals` entiers représentant les états finals
  *        Sigma - alphabet de l'automate
- * 
+ *
  * return:
  *        un AFN dont la tableau de transition est allouée mais vide
  */
 AFN  afn_init(int Q, int nbInitiaux, int * listInitiaux, int nbFinals, int * listFinals, char *Sigma){
-  AFN A; 
+  AFN A;
   if ( (A=malloc(sizeof(struct AFN))) == NULL){
     printf("malloc error A");
     exit(1);
@@ -36,7 +36,7 @@ AFN  afn_init(int Q, int nbInitiaux, int * listInitiaux, int nbFinals, int * lis
     exit(1);
   }
   for (int i=0; i<nbInitiaux; i++) A->I[i] = listInitiaux[i];
-  
+
   A->lenF = nbFinals;
   if ( (A->F = malloc(sizeof(int)*nbFinals)) == NULL){
     printf("malloc error A->F");
@@ -78,8 +78,8 @@ AFN  afn_init(int Q, int nbInitiaux, int * listInitiaux, int nbFinals, int * lis
  * FUNCTION: afn_print
  * -------------------
  * affiche l'AFN `A`
- * 
- * param: 
+ *
+ * param:
  *        A  - un AFN
  */
 void afn_print(AFN A){
@@ -101,7 +101,7 @@ void afn_print(AFN A){
     for (int s=0; s<A->lenSigma; s++){
       if (A->delta[q][s]!=NULL){
 	int cell_size = 0;
-	
+
 	while (A->delta[q][s][cell_size]!=-1) cell_size++;
 	max_cell_size = (max_cell_size < cell_size ? cell_size : max_cell_size);
       }
@@ -146,9 +146,9 @@ void afn_print(AFN A){
 /*
  * FUNCTION: afn_free
  * -------------------
- * libère la mémoire de l'AFN `A` initialisé par la fonction afn_init 
- * 
- * param: 
+ * libère la mémoire de l'AFN `A` initialisé par la fonction afn_init
+ *
+ * param:
  *        A  - un AFN
  */
 void afn_free(AFN A){
@@ -163,7 +163,7 @@ void afn_free(AFN A){
     free(A->delta[q]);
   }
   free(A->delta);
-  free(A);  
+  free(A);
 }
 
 
@@ -171,23 +171,43 @@ void afn_free(AFN A){
  * FUNCTION: afn_ajouter_transition
  * --------------------------------
  * ajoute la transition  `q1` -- `s` --> `q2` à l'automate `A` où l'ensemble des transitions
- * partant de l'état `q1` et étiquetées par le symbole `s` delta[q][s] est un tableau 
+ * partant de l'état `q1` et étiquetées par le symbole `s` delta[q][s] est un tableau
  * d'entiers trié dans l'ordre croissant et se terminant par -1, NULL si vide
- * 
- * param: 
+ *
+ * param:
  *        A  - un AFN
- *        q1 - état de départ de la transition    
+ *        q1 - état de départ de la transition
  *        s  - étiquette de la transition
- *        q2 - état d'arrivée de la transition    
+ *        q2 - état d'arrivée de la transition
  */
 void afn_ajouter_transition(AFN A, int q1, char s, int q2){
+  char c=A->dico[s-ASCII_FIRST];
+  if(A->delta[q1][c]==NULL){ //Si il n'y a pas de tableau pour les transitions partant de q1
+    A->delta[q1][c]=malloc(sizeof(int)*2); //on alloue un tableau d'entiers de taille 2
+    A->delta[q1][c][0]=q2; //la première valeure devient l'état d'arrivée de la première transition
+    A->delta[q1][c][1]=-1; //la deuxième devient le -1 signifiant la fin du tableau
+  }
+  else{
+    int cpt=0,tmp; //variable compteur qui va contenir la taille du tableau
+    int* reafn=A->delta[q1][c]; //pointeur sur le tableau pour pouvoir réallouer à une taille +2 pour pouvoir insérer la nouvelle valeure et remettre -1 à la fin du tableau
+    for(cpt;A->delta[q1][c][cpt]!=-1;cpt++)
+    A->delta[q1][c]=realloc(reafn,cpt+2);
+    for(int i=0;i<cpt ;i++){
+      if(q2<A->delta[q1][c][i]){
+        tmp=A->delta[q1][c][i];
+        A->delta[q1][c][i]=q2;
+        q2=tmp;
+      }
+    }
+    A->delta[q1][c][cpt]=q2;
+    A->delta[q1][c][cpt+1]=-1;
+  }
 }
-
 /*
  * FUNCTION: afn_finit
  * ------------------
  * initialise et renvoie un AFN à partir du fichier `file` écrit au format:
- * 
+ *
  *  'nombre_etat
  *  'nombre_etats_initiaux
  *  'etat_initial_1 etat_initial_2 ... etat_initial_n
@@ -197,19 +217,70 @@ void afn_ajouter_transition(AFN A, int q1, char s, int q2){
  *  'etat_i1 symbole_k1 etat_j1
  *  'etat_i2 symbole_k2 etat_j2
  *  '...
- *  'etat_in symbole_kn etat_jn 
- * 
+ *  'etat_in symbole_kn etat_jn
+ *
  * param :
  *         file - un nom de fichier
  * return:
  *         un AFN complet
  */
-AFN afn_finit(char *file);
+AFN afn_finit(char *file){
+  FILE* fichier;
+  int Q,nbInitiaux,nbFinals,place=0;
+  fichier=fopen(file,"r");
+  char chaine[10]="";
+  if(fichier!=NULL){
+    fgets(chaine,10,fichier);
+    sscanf(chaine,"%d",&Q);
+    fgets(chaine,10,fichier);
+    sscanf(chaine,"%d",&nbInitiaux);
+    int* listInitiaux;
+    if((listInitiaux=malloc(sizeof(int)*nbInitiaux))==NULL){
+      printf("malloc error listInitiaux");
+      exit(1);
+    }
+    int tmp;
+    fgets(chaine,10,fichier);
+    for(int i=0;i<nbInitiaux;i++){
+      sscanf(&chaine[place],"%d",&tmp);
+      listInitiaux[i]=tmp;
+      place=place+tmp/10+1;
+    }
+    place=0;
+    fgets(chaine,10,fichier);
+    sscanf(chaine,"%d",&nbFinals);
+    int* listFinals;
+    if((listFinals=malloc(sizeof(int)*nbFinals))==NULL){
+      printf("malloc error listFinals");
+      exit(1);
+    }
+    fgets(chaine,10,fichier);
+    for(int i=0;i<nbFinals;i++){
+      sscanf(&chaine[place],"%d",&tmp);
+      listFinals[i]=tmp;
+      place=place+tmp/10+1;
+    }
+    fgets(chaine,10,fichier);
+    char *Sigma=malloc(sizeof(char)*strlen(chaine));
+    strcpy(Sigma,chaine);
+    Sigma[strlen(Sigma)-1]='\0';
+    AFN A=afn_init(Q,nbInitiaux,listInitiaux,nbFinals,listFinals,Sigma);
+    int Ei,Ej;
+    char Sk;
+    while(fgets(chaine,10,fichier)){
+      sscanf(chaine,"%d %c %d",&Ei,&Sk,&Ej);
+      afn_ajouter_transition(A,Ei,Sk,Ej);
+    }
+    fclose(fichier);
+    return A;
+  }
+  return NULL;
+}
 
 /*
  * FUNCTION: afn_epsilon_fermeture
  * -------------------------------
- * renvoie un pointeur vers l'epsilon fermeture de l'ensemble d'états `R` 
+ * renvoie un pointeur vers l'epsilon fermeture de l'ensemble d'états `R`
  *
  * param:
  *        A - un AFN

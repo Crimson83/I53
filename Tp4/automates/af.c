@@ -43,7 +43,9 @@ int main(int argc, char *argv[]){
   afn_ajouter_transition(B, 3,'c',3);
   afn_print(B);
   AFD U=afd_finit(argv[1]);
+  AFN W=afn_finit(argv[2]); //afn via fichier
   afd_print(U);
+  afn_print(W);
   printf("la valeur de vérité est : %d\n",afd_simuler(U,argv[2]));
   afd_free(U);
   afn_free(B);
