@@ -6,5 +6,5 @@ typedef struct graphe{
   unsigned char *clr;
 }graphe;
 
-//graphe initgraphe(int);
+graphe initgraphe(int);
 #endif
