@@ -1,6 +1,7 @@
 #include "geante.h"
 #include <stdlib.h>
 #include <stdio.h>
+
 int geante(graphe g){
   int maxc=1,s,cpt=0;
   paire res=NULL;
@@ -16,6 +17,7 @@ int geante(graphe g){
   return maxc;
   }
 }
+
 int PPR2(int s,graphe g,int *cpt){
   g.clr[s]=1;
   *cpt=*cpt+1;
@@ -24,6 +26,7 @@ int PPR2(int s,graphe g,int *cpt){
       PPR2(s,g,cpt);
   }
 }
+
 info* geante(graphe g){
   info *res;
   int p=0;

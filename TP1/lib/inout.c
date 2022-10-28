@@ -29,6 +29,7 @@ graphe liregraphe(char *nom){
   fclose(source);
   return res;
 }
+
 void dessiner(char *nom,graphe g){
   FILE* dst;
   int i,j;
