@@ -6,4 +6,8 @@
 %option nounput
 %option noinput
 LETTRE [a-zA-Z]
-MOT {LETTRE}
+MOT {LETTRE}+
+BLANC [\t\n]
+
+%%
+{MOT {if}}
