@@ -1,19 +1,20 @@
-all:clean exec
+OBJ=graphe.o disjoint.o kruskal.o
+FLAGS=-Wall -g
 
-exec:main
-	./main
+exec:essai
+	./essai
 
-main:main.o graphe.o point.o kruskal.o
-	gcc -Wall $^ -o $@
+essai:main.c $(OBJ)
+	gcc $(FLAGS) -o essai main.c $(OBJ) -lm
 
-main.o:main.c point.h graphe.h kruskal.h
-	gcc -c $<
+kruskal.o:kruskal.c kruskal.h disjoint.h graphe.h
+	gcc $(FLAGS) -c kruskal.c
 
-acm.o:acm.c acm.h graphe.h point.h
-	gcc -c $<
+disjoint.o:disjoint.c disjoint.h
+	gcc $(FLAGS) -c disjoint.c
 
 graphe.o:graphe.c graphe.h
-	gcc -c $<
+	gcc $(FLAGS) -c graphe.c
 
-point.o:point.c point.h
-	gcc -c $<
+clean:
+	rm *.o *.dot

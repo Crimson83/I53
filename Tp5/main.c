@@ -1,48 +1,55 @@
-#include "kruskal.h"
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "graphe.h"
-#include "point.h"
-void dessinerarbre(point *pts,int n){
-  FILE *fichier;
-  char nom[128]="arbre.dot";
-  char cmd[1024];
-  fichier=fopen("arbre.dot","w");
-  if(fichier==NULL){
-    perror("erreur fonction DessinerGraphe");
-    exit(1);
+#include "kruskal.h"
+
+
+void DessinerNuage(point *pts, int n,graphe g){
+	FILE *dst;
+	char name[128] = "nuage.dot";
+	char cmd[1028];
+	dst = fopen("nuage.dot", "w");
+	if (dst == NULL ) {
+		perror("erreur fonction DessinerGraphe");
+		exit(1);
+
+	}
+	fprintf(dst, "graph nuage {\n" );
+	fprintf(dst, "node [shape=circle]\n");
+	for (int i = 0; i < n; ++i) {
+    fprintf(dst,"%d [pos = \"%f,%f!\" ];\n",i,pts[i].x,pts[i].y);
+	}
+  for (int i = 0; i < g.nbs; ++i) {
+    for (int j = i+1; j < g.nbs; j++) {
+      if (g.mat[i][j]) {
+        fprintf(dst,"%d -- %d\n", i, j);
+      }
+    }
   }
-  fprintf(fichier,"arbre{\n");
-  //fprintf(fichier,"node [shape = circle]");
-  for(int i=0;i<n;i++){
-    fprintf(fichier,"%d [pos = \"%f,%f!\"]");
-  }
-  fputc('}',fichier);
-  fclose(fichier);
-  sprintf(cmd,"dot -Kfdp -n -Tpng %s -o arbre.png",nom);
-  system(cmd);
-}
-void dessinernuage(point *pts,int n){
-  FILE *fichier;
-  char nom[128]="nuage.dot";
-  char cmd[1024];
-  fichier=fopen("nuage.dot","w");
-  if(fichier==NULL){
-    perror("erreur fonction DessinerGraphe");
-    exit(1);
-  }
-  fprintf(fichier,"graphe nuage{\n");
-  fprintf(fichier,"node [shape = circle]");
-  for(int i=0;i<n;i++){
-    fprintf(fichier,"%d [pos = \"%f,%f!\"]",i,pts[i].x,pts[i].y);
-  }
-  fputc('}',fichier);
-  fclose(fichier);
-  sprintf(cmd,"dot -Kfdp -n -Tpng %s -o arbre.png",nom);
-  system(cmd);
+	fputc('}',dst);
+	fclose(dst);
+	sprintf(cmd, "dot -Kfdp -n -Tpng %s -o nuage.png", name);
+	system(cmd);
 }
 
-int main(int argc,char **argv){
+
+void AFFICHER(graphe g)
+{
+  printf("nbs=%d\n",g.nbs);
+  for (int i = 0; i < g.nbs; ++i) {
+    for (int j = i+1; j < g.nbs; j++) {
+      if (g.mat[i][j]) {
+        printf("%d -- %d\n", i, j);
+      }
+    }
+  }
+}
+
+int main(int argc, char const *argv[]) {
   point *pts=nuage(10);
-  dessinernuage(pts,10);
   graphe g=kruskal(pts,10);
-
+  DessinerNuage(pts,10,g);
+  AFFICHER(g);
+  return 0;
 }

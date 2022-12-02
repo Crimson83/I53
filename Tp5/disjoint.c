@@ -15,16 +15,12 @@ disjoint representant(disjoint s){
   return s -> route = representant(s->route);
 }
 
-void reunion(disjoint u, disjoint v){
-  disjoint ru, rv;
-  ru = representant(u);
-  rv = representant(v);
-  if(ru -> rang > rv -> rang) rv -> route = ru;
-  else{
-    if(ru -> rang == rv -> rang){
-      rv -> route = ru;
-      ru -> rang++;
-    }
-    else ru -> route = rv;
+void reunion(disjoint ru, disjoint rv){
+  if(ru -> rang == rv -> rang){
+    ru -> rang++;
   }
+  if(ru->rang < rv->rang){
+    rv->route=ru;
+  }
+  else ru->route=rv;
 }

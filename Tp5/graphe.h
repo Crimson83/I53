@@ -1,11 +1,10 @@
-#ifndef GRAPHE_
-#define GRAPHE_
-#include "point.h"
-typedef struct ed{
-  struct ed* route;
-  int s;
-  int rang;
-}enrdisjoint;
-#endif
+#ifndef GRAPHE_H
+#define GRAPHE_H
+typedef struct graphe {
+  char** mat;
+  int nbs;
+}graphe;
 
-point* nuage(int n);
+
+graphe initgraphe(int);
+#endif
