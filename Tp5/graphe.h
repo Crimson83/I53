@@ -3,6 +3,7 @@
 typedef struct graphe {
   char** mat;
   int nbs;
+  int * clr;
 }graphe;
 
 

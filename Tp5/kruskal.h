@@ -16,7 +16,7 @@ typedef struct arete{
 float dist(point p1,point p2);
 point *nuage(int n);
 graphe kruskal(point *pts,int n);
-
+void parcours(int s,int *ptr,graphe *g,int * visite);
 
 
 #endif

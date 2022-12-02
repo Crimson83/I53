@@ -83,3 +83,15 @@ graphe kruskal(point *pts, int n)
   free(table);
   return res;
 }
+
+void parcours(int s,int *ptr,graphe *g,int *visite){
+  (*g).clr[*ptr]=s;
+  *ptr=*ptr+1;
+  for(int i=0;i<(*g).nbs;i++){
+    if(!visite[i]&&(*g).mat[s][i]){
+      visite[i]=1;
+      parcours(i,ptr,g,visite);
+      visite[i]=0;
+    }
+  }
+}
