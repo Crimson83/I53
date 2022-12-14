@@ -37,11 +37,11 @@ PROG : DEBUT INSTS FIN      {codegen($2);printf("\n");}
 ;
 
 INSTS : INSTS INST         { $$ = creer_noeudInst($1,$2);}
-|INST                      { $$ = $1;}
+| INST                     { $$ = $1;}
 ;
 
 INST:EXP ';'               { $$ = creer_noeudInst($1,NULL);}
-|VAR ID ';'                {if(tsymb == NULL) tsymb = ts_init_table($2); //si la liste chainee est vide, on l'initialise 
+| VAR ID ';'               {if(tsymb == NULL) tsymb = ts_init_table($2); //si la liste chainee est vide, on l'initialise
                             $$ = ts_ajouter_id(tsymb, $2);}
 ;
 
