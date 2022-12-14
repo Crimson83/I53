@@ -14,13 +14,18 @@ BLANC    [ \t\n]
 
 %%
 
-{BLANC}    {}
-"DEBUT"    { return DEBUT;}
-"FIN"      { return FIN;}
-";"        { return yytext[0];}
-{OPE}      { return yytext[0];}
-{NOMBRE}   { yylval.nb = atoi(yytext); return NB;}
-{PA}       { return yytext[0];}
+"VAR"         { return VAR;}
+"DEBUT"       { return DEBUT; }
+"FIN"         { return FIN; }
+";"           { return yytext[0]; }
+"AFFICHER"    { return AFFI; }
+{IDE}         { strcpy(yylval.id, yytext); return ID; }
+"<-"          { return AFF; }
+{NOMBRE}      { yylval.nb = atoi(yytext); return NB; }
+{OPE}         { return yytext[0]; }
+{PA}          { return yytext[0]; }
+{BLANC}       { }
+
 .          { fprintf(stderr, "[err lexer] caractere inconnu %c\n",yytext[0]); return 1;}
 
 %%

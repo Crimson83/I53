@@ -17,7 +17,7 @@ int ts_retrouver_id(ts tsymb, const char * id){
   ts current = tsymb;
   while (current != NULL){
     if (strcmp(current->id, id) == 0) return current->adr;
-    current = current->next;      
+    current = current->next;
   }
   return -1;
 }
@@ -55,6 +55,17 @@ void ts_print_table(ts tsymb){
     current = current->next;
   }
   printf("(id:%s, adr:%d)\n",current->id,current->adr);
+}
+
+int ts_derniere_adr(ts tsymb){ //fonction retourne la dernière adresse de la table symbole
+  ts current=tsymb;
+  if(current==NULL){
+    return(0);
+  }
+  while(current->next!=NULL){
+    current=current->next;
+  }
+  return current->adr;
 }
 
 void ts_free_table(ts tsymb){

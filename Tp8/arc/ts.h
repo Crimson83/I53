@@ -23,5 +23,6 @@ int ts_retrouver_id(ts tsymb, const char * id);
 int ts_ajouter_id(ts tsymb, const char *id);
 void ts_print_table(ts tsymb);
 void ts_free_table(ts tsymb);
+int ts_derniere_adr(ts tsymb);
 
 #endif

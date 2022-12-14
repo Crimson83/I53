@@ -5,8 +5,8 @@ OBJ = ts.o asa.o parser.o lexer.o
 all: arc
 
 exec:
-	./arc exemple.algo > a.out
-	
+	./arc exemple.algo > algo.ram
+
 arc :  $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(OBJ) -lfl
 
